@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Style.css">
+</head>
+<body>
+    <!-- Authentication Views -->
+    <div id="authContainer" class="auth-container">
+        <!-- Login View -->
+        <div id="loginView" class="auth-card">
+            <h2 class="auth-title">Login to Task Tracker</h2>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span id="loginBtnText">Login</span>
+                    <span id="loginSpinner" class="loading-spinner" style="display: none;"></span>
+                </button>
+            </form>
+            <div class="auth-footer">
+                Don't have an account? <span id="showRegister" class="auth-link">Register</span>
+            </div>
+        </div>
+
+        <!-- Register View -->
+        <div id="registerView" class="auth-card" style="display: none;">
+            <h2 class="auth-title">Create your account</h2>
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span id="registerBtnText">Register</span>
+                    <span id="registerSpinner" class="loading-spinner" style="display: none;"></span>
+                </button>
+            </form>
+            <div class="auth-footer">
+                Already have an account? <span id="showLogin" class="auth-link">Login</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="taskApp" class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div>Task Tracker</div>
+            </div>
+            <div class="menu-items">
+                <div class="menu-item" id="dashboardBtn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item active" id="taskBoardBtn">
+                    <i class="fas fa-columns"></i>
+                    <span>Task Board</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Pending Tasks</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Completed</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+            <div class="user-section" id="userSection">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-name" id="userName">User</div>
+                <div style="margin-left: auto; cursor: pointer;" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content - Task Board View -->
+        <div class="main-content" id="taskBoardView">
+            <div class="header">
+                <div class="page-title">
+                    Task Board
+                    <span class="page-subtitle">Manage your tasks</span>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-label">Today</div>
+                    <div class="stat-value" id="todayTaskCount">0</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-icon">
+                        <i class="fas fa-list-check"></i>
+                    </div>
+                    <div class="stat-label">Task</div>
+                    <div class="stat-value" id="totalTaskCount">0</div>
+                </div>
+            </div>
+
+            <div class="task-input-section">
+                <div class="task-input-header">
+                    <div>Tasks</div>
+                    <button class="btn btn-primary" id="addTaskBtn">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                <div class="task-form">
+                    <input type="text" class="task-input" id="quickTaskInput" placeholder="Add a quick task...">
+                    <button class="btn btn-secondary" id="quickAddTaskBtn">Add</button>
+                </div>
+            </div>
+
+            <div class="task-board">
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-clipboard-list" style="color: #FF5252;"></i>
+                            To Do
+                            <div class="task-count" id="todoCount">0</div>
+                        </div>
+                    </div>
+                    <div class="tasks-container" id="todoTasks">
+                        <!-- Task cards will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-spinner" style="color: #2196F3;"></i>
+                            In Progress
+                            <div class="task-count" id="progressCount">0</div>
+                        </div>
+                    </div>
+                    <div class="tasks-container" id="progressTasks">
+                        <!-- Task cards will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="task-column">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-check-circle" style="color: #4CAF50;"></i>
+                            Done
+                            <div class="task-count" id="doneCount">0</div>
+                        </div>
+                    </div>
+                    <div class="tasks-container" id="doneTasks">
+                        <!-- Task cards will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div class="main-content" id="dashboardView" style="display: none;">
+            <div class="dashboard-header">
+                <div class="dashboard-title">Dashboard</div>
+                <div class="header-actions">
+                    <button class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">Total Tasks</div>
+                        <div class="card-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-card-value" id="dashTotalTasks">0</div>
+                    <div class="dashboard-card-subtitle">All tasks</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">Completed</div>
+                        <div class="card-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-card-value" id="dashCompletedTasks">0</div>
+                    <div class="dashboard-card-subtitle">Tasks completed</div>
+                </div>
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">Pending</div>
+                        <div class="card-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="dashboard-card-value" id="dashPendingTasks">0</div>
+                    <div class="dashboard-card-subtitle">Tasks in progress</div>
+                </div>
+            </div>
+
+            <div class="task-list-section">
+                <div class="task-list-header">
+                    <div class="task-list-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Pending Tasks
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="dashAddTaskBtn">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+                <div class="task-list" id="dashPendingTasksList">
+                    <!-- Pending tasks will be dynamically added here -->
+                </div>
+            </div>
+
+            <div class="task-list-section">
+                <div class="task-list-header">
+                    <div class="task-list-title">
+                        <i class="fas fa-check-circle"></i>
+                        Completed Tasks
+                    </div>
+                </div>
+                <div class="task-list" id="dashCompletedTasksList">
+                    <!-- Completed tasks will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="calendar-section">
+                <div class="calendar-header">
+                    <div class="card-title">Today's</div>
+                    <div class="month-nav">
+                        <i class="fas fa-chevron-left"></i>
+                        <span id="currentMonth">April</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be dynamically generated here -->
+                </div>
+            </div>
+
+            <div class="task-details-card">
+                <div class="card-header">
+                    <div class="card-title">Tasks</div>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="task-actions-row">
+                    <div class="quick-action">
+                        <i class="fas fa-plus"></i> Today
+                    </div>
+                    <div class="quick-action">
+                        <i class="fas fa-list"></i> All
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Add New Task</div>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskTitle">Title</label>
+                    <input type="text" id="taskTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescription">Description</label>
+                    <textarea id="taskDescription" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="taskAssignee">Assign To</label>
+                    <select id="taskAssignee" class="form-control">
+                        <!-- Users will be dynamically added here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskStatus">Status</label>
+                    <select id="taskStatus" class="form-control">
+                        <option value="todo">To Do</option>
+                        <option value="progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelTask">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveTaskBtn">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script src="App.js"></script>
+</body>
+</html>
